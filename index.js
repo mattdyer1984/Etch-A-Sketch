@@ -2,14 +2,20 @@ const target = document.querySelector("#container");
 const grid = document.querySelector("#gridsize");
 const submit = document.querySelector("#submit");
 const reset = document.querySelector('#reset');
-const resetSquare = document.querySelector('.paint')
+const colour = document.querySelector('#colours');
 
+function removeAllChildNodes(parent) {
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+}
 
-function etch(gridsize) {
+function etch(gridsize, userColour) {
   const squareWidth = Math.floor(1200/gridsize);
-  console.log(squareWidth)
   target.style.display = "grid";
   target.style.gridTemplateColumns = `repeat(${gridsize}, ${squareWidth}px)`;
+  removeAllChildNodes(target); 
+
   for (let i = 0; i < gridsize * gridsize; i++) {
     const div = document.createElement("div");
     div.classList.add("paint");
@@ -17,14 +23,14 @@ function etch(gridsize) {
     div.style.width = `${squareWidth}px`;
     div.style.height = `${squareWidth}px`;
     div.addEventListener("mouseover", () => {
-      div.style.backgroundColor = "blue";
+      div.style.backgroundColor = userColour;
     });
     reset.addEventListener("click", () => {
         div.style.backgroundColor = "white";
       });
-      div.addEventListener("click", () => {
-        div.style.backgroundColor = "white";
-      });
+    div.addEventListener("click", () => {
+      div.style.backgroundColor = "white";
+    });
 
     target.appendChild(div);
   }
@@ -32,5 +38,12 @@ function etch(gridsize) {
 
 submit.addEventListener("click", () => {
   const gridsize = grid.value;
-  etch(gridsize);
+  etch(gridsize, colour.value); 
+});
+
+
+colour.addEventListener("change", () => {
+  userColour = colour.value;
+  gridsize = grid.value;
+  etch(gridsize, userColour); 
 });
